@@ -1,6 +1,35 @@
-1 2
+# Ethernet Switch Implementation
 
+A software Ethernet switch implemented in Python, simulated with Mininet.
+Implements MAC learning, VLAN isolation, and a custom STP-inspired protocol.
+
+## Features
+
+### Switching (Layer 2)
+- MAC address table learning (MAC + VLAN keyed)
+- Unicast forwarding to known ports, flooding for unknown destinations
+- Broadcast/multicast handling scoped to VLAN
+
+### VLAN
+- Access and trunk port modes, config-file driven (configs/switchX.cfg)
+- Custom Poli VLAN tagging: TPID=0x8200, IEEE 802.1Q-like header
+- 4-bit VID extension derived from MAC nibble sum for per-host isolation
+- Tag insertion on access→trunk egress, tag stripping on trunk→access egress
+- VLAN-scoped flooding: frames never cross VLAN boundaries
+
+### STP (Spanning Tree)
+- PPDU frame construction: LLC header, Protocol ID 0x0002, sequence numbers modulo 100
+- HPDU heartbeat frames sent every second on all ports (EtherType 0x0800, data=0xFF)
+- Root bridge election via bridge ID comparison (priority + MAC)
+- Port states: Blocking / Forwarding
+
+## Stack
+Python · Mininet · Linux raw sockets · IEEE 802.1Q · STP 802.1D · Wireshark · struct
 Task 1 - Tabela MAC:
+
+Romanian:
+
+Task1:
 Pentru acest task, am creat o tabela MAC in care am stocat fiecare
 adresa MAC sursa primita pe fiecare port. La inceput, switch-ul nu
 stia care porturi corespund cu ce adrese MAC, asa ca am folosit
